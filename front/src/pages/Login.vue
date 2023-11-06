@@ -1,41 +1,39 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { useAuth } from '../hooks/useAuth'
+import router from '@/router'
 
-const user = ref<any>(null)
+const { login } = useAuth()
 
-const callback = async (response: any) => {
-  const credential = response.credential
+const handleSubmitForm = async (e: Event) => {
+  e.preventDefault()
+  const formData = new FormData(e.target as HTMLFormElement)
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
 
-  // 検証
-  const ret: any = await fetch(`/api/auth?id_token=${credential}`)
-  if (ret.ok) {
-    // ユーザ情報を取得
-    user.value = await ret.json()
-  } else {
-    // エラー処理
-    console.log(ret.error)
-    user.value = null
+  const success = await login.mutateAsync({ email, password })
+  if (success) {
+    router.push('/')
   }
-  console.log({ user: user.value })
-}
-
-const logout = () => {
-  user.value = null
 }
 </script>
+
 <template>
-  <h1>Google Auth Test</h1>
+  <h1>ログイン</h1>
 
-  <div v-if="user">
-    <p>ログインしました</p>
-    <code>
-      <pre>{{ JSON.stringify(user, null, 2) }}</pre>
-    </code>
+  <form class="grid grid-cols-1 gap-4" @submit="handleSubmitForm">
+    <fieldset>
+      <Label>メールアドレス</Label>
+      <Input name="email" type="text" placeholder="メールアドレス" />
+    </fieldset>
 
-    <button @click="logout">Logout</button>
-  </div>
+    <fieldset>
+      <Label>パスワード</Label>
+      <Input name="password" type="password" placeholder="パスワード" />
+    </fieldset>
 
-  <div v-else>
-    <GoogleLogin :callback="callback" />
-  </div>
+    <Button>ログイン</Button>
+  </form>
 </template>

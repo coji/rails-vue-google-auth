@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 const app = createApp(App)
+import './index.css'
 
 import { VueQueryPlugin } from '@tanstack/vue-query'
 app.use(VueQueryPlugin)
