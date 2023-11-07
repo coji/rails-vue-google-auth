@@ -7,8 +7,12 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuItem,
-} from './ui/dropdown-menu/index.js'
-import { Avatar, AvatarFallback } from './ui/avatar/index.js'
+} from '@/components/ui/dropdown-menu/index.js'
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from '@/components/ui/avatar/index.js'
 import { useAuth } from '@/hooks/useAuth'
 const { me, logout } = useAuth()
 </script>
@@ -17,6 +21,7 @@ const { me, logout } = useAuth()
   <DropdownMenu v-if="me.data.value">
     <DropdownMenuTrigger>
       <Avatar>
+        <AvatarImage :src="me.data.value.photoUrl"></AvatarImage>
         <AvatarFallback>{{ me.data.value.displayName }}</AvatarFallback>
       </Avatar>
     </DropdownMenuTrigger>

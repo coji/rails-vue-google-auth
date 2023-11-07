@@ -1,6 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
 import { useToast } from '@/components/ui/toast/use-toast'
 
+interface User {
+  id: number
+  displayName: string
+  photoUrl?: string
+  email: string
+}
+
 interface Credentials {
   accessToken: string
   uid: string
@@ -11,20 +18,26 @@ export const useAuth = () => {
   const queryClient = useQueryClient()
   const { toast } = useToast()
 
-  /**
-   * 認証情報ステートの取得
-   */
-  const getCredentials = () =>
-    queryClient.getQueryData<Credentials | undefined>(['auth', 'credentials'])
+  const credentials = useQuery<Credentials | undefined>({
+    queryKey: ['auth', 'credentials'],
+    enabled: false,
+  })
+  const me = useQuery<User | undefined>({
+    queryKey: ['auth', 'me'],
+    enabled: false,
+  })
+
   /**
    * 認証情報ステートの更新
    * @param credentials
    */
-  const updateCredentials = (credentials?: Credentials) => {
+  const updateCredentials = (credentials?: Credentials) =>
     queryClient.setQueryData(['auth', 'credentials'], credentials)
-    queryClient.invalidateQueries({ queryKey: ['auth', 'me'] })
-    return credentials
-  }
+
+  /**
+   * ユーザー情報ステートの更新
+   */
+  const updateMe = (me?: User) => queryClient.setQueryData(['auth', 'me'], me)
 
   /**
    * ログイン
@@ -37,13 +50,40 @@ export const useAuth = () => {
       email: string
       password: string
     }) => {
-      if (!(email === 'coji@techtalk.jp' && password === 'password')) {
-        throw new Error('Email or password is invalid.')
+      const response = await fetch(
+        'http://localhost:3000/api/v1/auth/sign_in',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        },
+      )
+      if (!response.ok) throw new Error(await response.text())
+
+      const credential = {
+        accessToken: response.headers.get('access-token')!,
+        uid: response.headers.get('uid')!,
+        client: response.headers.get('client')!,
       }
-      updateCredentials({
-        accessToken: 'accessToken',
-        client: 'client',
-        uid: 'uid',
+      const { data: user } = (await response.json()) as {
+        data: {
+          allow_password_change: boolean
+          email: string
+          id: number
+          image: string | null
+          name: string
+          nickname: string | null
+          provider: string
+          uid: string
+        }
+      }
+
+      updateCredentials(credential)
+      updateMe({
+        id: user.id,
+        photoUrl: user.image ?? undefined,
+        displayName: user.name,
+        email: user.email,
       })
       return true
     },
@@ -66,36 +106,13 @@ export const useAuth = () => {
    */
   const logout = () => {
     updateCredentials(undefined)
+    updateMe(undefined)
   }
-
-  /**
-   * 自分の情報
-   */
-  const me = useQuery({
-    queryKey: ['auth', 'me'],
-    queryFn: () => {
-      // return fetch('/api/v1/auth/me', {
-      //   method: 'GET',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // }).then((res) => res.json())
-      const credentials = getCredentials()
-      if (!credentials) {
-        return null
-      }
-      return {
-        id: 1,
-        displayName: '溝口浩二',
-        email: 'coji@techtalk.jp',
-      }
-    },
-    initialData: null,
-  })
 
   return {
     login,
     logout,
     me,
+    credentials,
   }
 }
