@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppLoginButton from '@/components/AppLoginButton.vue'
+import AppLoginButton from '@/components/AppMeMenu.vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
 </script>
 

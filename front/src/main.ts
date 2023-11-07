@@ -1,3 +1,6 @@
+import { config } from 'dotenv'
+config()
+
 import { createApp } from 'vue'
 const app = createApp(App)
 import './index.css'

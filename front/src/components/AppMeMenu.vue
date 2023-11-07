@@ -7,8 +7,8 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuItem,
-} from './ui/dropdown-menu'
-import { Avatar, AvatarFallback } from './ui/avatar'
+} from './ui/dropdown-menu/index.js'
+import { Avatar, AvatarFallback } from './ui/avatar/index.js'
 import { useAuth } from '@/hooks/useAuth'
 const { me, logout } = useAuth()
 </script>
