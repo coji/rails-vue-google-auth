@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuSeparator,
@@ -34,5 +33,4 @@ const { me, logout } = useAuth()
       <DropdownMenuItem @click="logout()">Logout</DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
-  <Button v-else size="sm" @click="$router.push('/login')">Login</Button>
 </template>

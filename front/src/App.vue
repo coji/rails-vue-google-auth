@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AppLoginButton from '@/components/AppMeMenu.vue'
+import AppMeMenu from '@/components/AppMeMenu.vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
 </script>
 
@@ -13,10 +13,10 @@ import Toaster from '@/components/ui/toast/Toaster.vue'
       </h1>
 
       <div class="flex-grow"></div>
-      <AppLoginButton />
+      <AppMeMenu />
     </header>
 
-    <main class="p-2">
+    <main class="px-2">
       <router-view />
       <Toaster />
     </main>

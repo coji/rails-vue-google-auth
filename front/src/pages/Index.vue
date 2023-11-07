@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -14,7 +15,15 @@ const { data: posts } = usePosts()
 </script>
 
 <template>
-  <div v-if="!me.data.value">You are not logged in.</div>
+  <div class="flex justify-center items-center h-full" v-if="!me.data.value">
+    <div class="text-center">
+      <div>You are not logged in.</div>
+      <div class="mt-2">
+        <Button size="sm" @click="$router.push('/login')">Login</Button>
+      </div>
+    </div>
+  </div>
+
   <div v-else class="grid grid-cols-2 gap-2">
     <Card v-for="post of posts" :key="post.id">
       <CardHeader>
