@@ -52,3 +52,9 @@ gem "devise_token_auth", "~> 1.2"
 gem "devise", "~> 4.9"
 
 gem "googleauth", "~> 1.8"
+
+gem "dockerfile-rails", ">= 1.5", :group => :development
+
+gem "sentry-ruby", "~> 5.12"
+
+gem "sentry-rails", "~> 5.12"
