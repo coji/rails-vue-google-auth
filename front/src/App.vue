@@ -1,12 +1,6 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
+import AppLoginButton from '@/components/AppLoginButton.vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
-import { useAuth } from '@/hooks/useAuth'
-
-const { me } = useAuth()
-const { data: meData } = me
-console.log({ isLoading: me.isLoading.value })
-console.log({ 'me.data': me.data.value })
 </script>
 
 <template>
@@ -19,8 +13,7 @@ console.log({ 'me.data': me.data.value })
       </h1>
 
       <div class="flex-grow"></div>
-      <div v-if="meData">{{ meData }}</div>
-      <Button v-else @click="$router.push('/login')">Login</Button>
+      <AppLoginButton />
     </header>
 
     <main class="p-2">

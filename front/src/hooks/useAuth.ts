@@ -9,12 +9,22 @@ interface Credentials {
 
 export const useAuth = () => {
   const queryClient = useQueryClient()
-  const { data: credentials } = useQuery<Credentials | null>({
-    queryKey: ['auth', 'credentials'],
-    initialData: null,
-    enabled: false,
-  })
   const { toast } = useToast()
+
+  /**
+   * 認証情報ステートの取得
+   */
+  const getCredentials = () =>
+    queryClient.getQueryData<Credentials | undefined>(['auth', 'credentials'])
+  /**
+   * 認証情報ステートの更新
+   * @param credentials
+   */
+  const updateCredentials = (credentials?: Credentials) => {
+    queryClient.setQueryData(['auth', 'credentials'], credentials)
+    queryClient.invalidateQueries({ queryKey: ['auth', 'me'] })
+    return credentials
+  }
 
   /**
    * ログイン
@@ -30,35 +40,32 @@ export const useAuth = () => {
       if (!(email === 'coji@techtalk.jp' && password === 'password')) {
         throw new Error('Email or password is invalid.')
       }
-      queryClient.setQueryData(['auth', 'credentials'], {
+      updateCredentials({
         accessToken: 'accessToken',
         client: 'client',
         uid: 'uid',
       })
-      queryClient.invalidateQueries({ queryKey: ['auth', 'me'] })
       return true
     },
-    onSuccess: () => {
+    onSuccess: () =>
       toast({
         title: 'Login Success',
         description: 'You are logged in.',
         variant: 'default',
-      })
-    },
-    onError: (error) => {
+      }),
+    onError: (error) =>
       toast({
         title: 'Login Error',
         description: error.message,
         variant: 'destructive',
-      })
-    },
+      }),
   })
 
   /**
    * ログアウト
    */
   const logout = () => {
-    queryClient.setQueryData(['auth', 'credentials'], null)
+    updateCredentials(undefined)
   }
 
   /**
@@ -73,14 +80,14 @@ export const useAuth = () => {
       //     'Content-Type': 'application/json',
       //   },
       // }).then((res) => res.json())
-      if (credentials.value) {
-        return {
-          id: 1,
-          displayName: '溝口浩二',
-          email: 'coji@techtalk.jp',
-        }
-      } else {
+      const credentials = getCredentials()
+      if (!credentials) {
         return null
+      }
+      return {
+        id: 1,
+        displayName: '溝口浩二',
+        email: 'coji@techtalk.jp',
       }
     },
     initialData: null,
@@ -90,6 +97,5 @@ export const useAuth = () => {
     login,
     logout,
     me,
-    credentials,
   }
 }
