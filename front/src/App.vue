@@ -21,6 +21,6 @@ import Toaster from '@/components/ui/toast/Toaster.vue'
       <Toaster />
     </main>
 
-    <footer class="p-2 text-center">Copyright &copy; coji.</footer>
+    <footer class="p-2 text-center">Copyright &copy; coji</footer>
   </div>
 </template>

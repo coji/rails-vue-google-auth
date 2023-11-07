@@ -18,26 +18,45 @@ export const useAuth = () => {
   const queryClient = useQueryClient()
   const { toast } = useToast()
 
-  const credentials = useQuery<Credentials | undefined>({
+  const credentials = useQuery<Credentials | null>({
     queryKey: ['auth', 'credentials'],
     enabled: false,
+    initialData: null,
   })
-  const me = useQuery<User | undefined>({
+
+  const getAuthHeaders = ():
+    | {
+        'access-token': string
+        uid: string
+        client: string
+      }
+    | {} => {
+    if (credentials.data.value === null) return {}
+    return {
+      'access-token': credentials.data.value.accessToken,
+      uid: credentials.data.value.uid,
+      client: credentials.data.value.client,
+    }
+  }
+
+  const me = useQuery<User | null>({
     queryKey: ['auth', 'me'],
     enabled: false,
+    initialData: null,
   })
 
   /**
    * 認証情報ステートの更新
    * @param credentials
    */
-  const updateCredentials = (credentials?: Credentials) =>
+  const updateCredentials = (credentials: Credentials | null) =>
     queryClient.setQueryData(['auth', 'credentials'], credentials)
 
   /**
    * ユーザー情報ステートの更新
    */
-  const updateMe = (me?: User) => queryClient.setQueryData(['auth', 'me'], me)
+  const updateMe = (me: User | null) =>
+    queryClient.setQueryData(['auth', 'me'], me)
 
   /**
    * ログイン
@@ -85,6 +104,7 @@ export const useAuth = () => {
         displayName: user.name,
         email: user.email,
       })
+      queryClient.invalidateQueries()
       return true
     },
     onSuccess: () =>
@@ -104,9 +124,33 @@ export const useAuth = () => {
   /**
    * ログアウト
    */
-  const logout = () => {
-    updateCredentials(undefined)
-    updateMe(undefined)
+  const logout = async () => {
+    if (!credentials.data.value) {
+      toast({
+        title: 'Logout Error',
+        description: 'Not logged in.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    const response = await fetch('http://localhost:3000/api/v1/auth/sign_out', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders(),
+      },
+    })
+    if (!response.ok) throw new Error(await response.text())
+
+    updateCredentials(null)
+    updateMe(null)
+    queryClient.invalidateQueries()
+
+    toast({
+      title: 'Logout Success',
+      description: 'You are logged out.',
+    })
   }
 
   return {
@@ -114,5 +158,6 @@ export const useAuth = () => {
     logout,
     me,
     credentials,
+    getAuthHeaders,
   }
 }

@@ -21,7 +21,7 @@ const { me, logout } = useAuth()
   <DropdownMenu v-if="me.data.value">
     <DropdownMenuTrigger>
       <Avatar>
-        <AvatarImage :src="me.data.value.photoUrl"></AvatarImage>
+        <AvatarImage :src="me.data.value.photoUrl ?? ''"></AvatarImage>
         <AvatarFallback>{{ me.data.value.displayName }}</AvatarFallback>
       </Avatar>
     </DropdownMenuTrigger>
