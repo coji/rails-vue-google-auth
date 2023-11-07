@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/useAuth'
 import router from '@/router'
 
-const { login } = useAuth()
+const { googleLogin, login } = useAuth()
 
 const handleSubmitForm = async (e: Event) => {
   e.preventDefault()
@@ -14,6 +14,15 @@ const handleSubmitForm = async (e: Event) => {
   const password = formData.get('password') as string
 
   const success = await login.mutateAsync({ email, password })
+  if (success) {
+    router.push('/')
+  }
+}
+
+const callback = async (response: any) => {
+  const credential = response.credential
+
+  const success = await googleLogin.mutateAsync({ idToken: credential })
   if (success) {
     router.push('/')
   }
@@ -36,4 +45,6 @@ const handleSubmitForm = async (e: Event) => {
 
     <Button>ログイン</Button>
   </form>
+
+  <GoogleLogin :callback="callback" />
 </template>

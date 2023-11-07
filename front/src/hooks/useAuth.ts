@@ -59,7 +59,7 @@ export const useAuth = () => {
     queryClient.setQueryData(['auth', 'me'], me)
 
   /**
-   * ログイン
+   * email / password でログイン
    */
   const login = useMutation({
     mutationFn: async ({
@@ -77,6 +77,57 @@ export const useAuth = () => {
           body: JSON.stringify({ email, password }),
         },
       )
+      if (!response.ok) throw new Error(await response.text())
+
+      const credential = {
+        accessToken: response.headers.get('access-token')!,
+        uid: response.headers.get('uid')!,
+        client: response.headers.get('client')!,
+      }
+      const { data: user } = (await response.json()) as {
+        data: {
+          allow_password_change: boolean
+          email: string
+          id: number
+          image: string | null
+          name: string
+          nickname: string | null
+          provider: string
+          uid: string
+        }
+      }
+
+      updateCredentials(credential)
+      updateMe({
+        id: user.id,
+        photoUrl: user.image ?? undefined,
+        displayName: user.name,
+        email: user.email,
+      })
+      queryClient.invalidateQueries()
+      return true
+    },
+    onSuccess: () =>
+      toast({
+        title: 'Login Success',
+        description: 'You are logged in.',
+        variant: 'default',
+      }),
+    onError: (error) =>
+      toast({
+        title: 'Login Error',
+        description: error.message,
+        variant: 'destructive',
+      }),
+  })
+
+  const googleLogin = useMutation({
+    mutationFn: async ({ idToken }: { idToken: string }) => {
+      const response = await fetch('http://localhost:3000/google_auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_token: idToken }),
+      })
       if (!response.ok) throw new Error(await response.text())
 
       const credential = {
@@ -154,6 +205,7 @@ export const useAuth = () => {
   }
 
   return {
+    googleLogin,
     login,
     logout,
     me,
