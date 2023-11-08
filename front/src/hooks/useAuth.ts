@@ -70,7 +70,7 @@ export const useAuth = () => {
       password: string
     }) => {
       const response = await fetch(
-        'http://localhost:3000/api/v1/auth/sign_in',
+        `${import.meta.env.VITE_API_ROOT}/api/v1/auth/sign_in`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -123,11 +123,14 @@ export const useAuth = () => {
 
   const googleLogin = useMutation({
     mutationFn: async ({ idToken }: { idToken: string }) => {
-      const response = await fetch('http://localhost:3000/google_auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id_token: idToken }),
-      })
+      const response = await fetch(
+        `${import.meta.env.VITE_API_ROOT}/api/v1/auth/google/sign_in`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_token: idToken }),
+        },
+      )
       if (!response.ok) throw new Error(await response.text())
 
       const credential = {
@@ -185,13 +188,16 @@ export const useAuth = () => {
       return
     }
 
-    const response = await fetch('http://localhost:3000/api/v1/auth/sign_out', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        ...getAuthHeaders(),
+    const response = await fetch(
+      `${import.meta.env.VITE_API_ROOT}/api/v1/auth/sign_out`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
       },
-    })
+    )
     if (!response.ok) throw new Error(await response.text())
 
     updateCredentials(null)

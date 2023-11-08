@@ -9,12 +9,15 @@ export const usePosts = () => {
     queryFn: async () => {
       if (credentials.data.value === null) return []
 
-      const response = await fetch('http://localhost:3000/api/v1/posts', {
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeaders(),
+      const response = await fetch(
+        `${import.meta.env.VITE_API_ROOT}/api/v1/posts`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders(),
+          },
         },
-      })
+      )
 
       if (!response.ok) {
         throw new Error('Network response was not ok')
