@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppMeMenu from '@/components/AppMeMenu.vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 </script>
 
 <template>
@@ -23,4 +24,5 @@ import Toaster from '@/components/ui/toast/Toaster.vue'
 
     <footer class="p-2 text-center">Copyright &copy; coji</footer>
   </div>
+  <VueQueryDevtools />
 </template>
