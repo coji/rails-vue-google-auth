@@ -2,6 +2,7 @@
 import AppMeMenu from '@/components/AppMeMenu.vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
+import { GithubIcon, TwitterIcon } from 'lucide-vue-next'
 </script>
 
 <template>
@@ -22,7 +23,31 @@ import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
       <Toaster />
     </main>
 
-    <footer class="p-2 text-center">Copyright &copy; coji</footer>
+    <footer class="p-2 text-center">
+      <div>
+        Copyright &copy;
+        <a
+          class="underline"
+          href="https://twitter.com/techtalkjp"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <TwitterIcon class="inline h-4 w-4" />
+          <span>coji</span>
+        </a>
+      </div>
+      <div>
+        <a
+          class="underline"
+          href=" https://github.com/coji/rails-vue-google-auth"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <GithubIcon class="inline h-4 w-4" />
+          <span>GitHub</span>
+        </a>
+      </div>
+    </footer>
   </div>
   <VueQueryDevtools />
 </template>
