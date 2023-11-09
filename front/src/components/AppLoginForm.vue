@@ -47,15 +47,15 @@ const callback = async (response: any) => {
     </CardHeader>
 
     <CardContent>
-      <form class="grid grid-cols-1 gap-4" @submit="handleSubmitForm">
+      <form class="grid grid-cols-1 gap-2" @submit="handleSubmitForm">
         <fieldset>
-          <Label>メールアドレス</Label>
-          <Input name="email" type="text" placeholder="メールアドレス" />
+          <Label for="email">メールアドレス</Label>
+          <Input id="email" name="email" type="text" />
         </fieldset>
 
         <fieldset>
-          <Label>パスワード</Label>
-          <Input name="password" type="password" placeholder="パスワード" />
+          <Label for="password">パスワード</Label>
+          <Input id="password" name="password" type="password" />
         </fieldset>
 
         <Button>ログイン</Button>
