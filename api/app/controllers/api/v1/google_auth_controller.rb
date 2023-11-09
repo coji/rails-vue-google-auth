@@ -17,10 +17,9 @@ module Api
         @user.uid = user_data['email']
         @user.name = user_data['name']
         @user.image = user_data['picture']
-        @token = @user.create_token
-        @user.save # トークン作成してから保存しないと検証時にエラーになる
 
-        auth_header = @user.build_auth_headers(@token.token, @token.client)
+        @token = @user.create_token
+        auth_header = @user.update_auth_headers(@token.token, @token.client)
         response.headers.merge!(auth_header)
 
         render json: { data: @user.as_json(except: %i[tokens created_at updated_at]) }
