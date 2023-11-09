@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # google 認証用のルーティング
   devise_for :users, skip: :all
   devise_scope :user do
-    post 'api/v1/auth/google/sign_in', to: 'api/v1/google_auth#google_auth'
+    post 'api/v1/auth/google/sign_in', to: 'api/v1/google_auth#auth'
   end
 
   namespace :api do

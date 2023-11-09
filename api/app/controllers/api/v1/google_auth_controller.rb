@@ -6,7 +6,7 @@ module Api
   module V1
     # Google認証用コントローラー
     class GoogleAuthController < DeviseTokenAuth::ApplicationController
-      def google_auth
+      def auth
         user_data =
           Google::Auth::IDTokens.verify_oidc(
             params[:id_token],
@@ -14,15 +14,13 @@ module Api
           )
 
         @user = User.find_or_initialize_by(provider: 'google', email: user_data['email'])
-        @user.uid = user_data['email']
-        @user.name = user_data['name']
-        @user.image = user_data['picture']
+        @user.assign_attributes(uid: user_data['email'], name: user_data['name'], image: user_data['picture'])
 
         @token = @user.create_token
         auth_header = @user.update_auth_headers(@token.token, @token.client)
         response.headers.merge!(auth_header)
 
-        render json: { data: @user.as_json(except: %i[tokens created_at updated_at]) }
+        render json: { data: @user.as_json(only: %i[id provider uid name image email created_at updated_at]) }
       rescue StandardError => e
         render json: { error: "Google 認証エラー: #{e}" }, status: :unprocessable_entity
       end
