@@ -25,7 +25,8 @@ FROM base as build
 
 # Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential pkg-config
+    apt-get install --no-install-recommends -y build-essential pkg-config nodejs npm && \
+    npm i -g pnpm
 
 # Install application gems
 COPY --link ./api/Gemfile ./api/Gemfile.lock ./
@@ -35,10 +36,13 @@ RUN bundle install && \
 
 # Copy application code
 COPY --link ./api .
-COPY --link front/dist ./public
+COPY --link ./front ./front
 
 # Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile app/ lib/
+RUN bundle exec bootsnap precompile app/ lib/ && \
+  cd ./front && pnpm install && pnpm build && cd .. && \
+  cp -r ./front/dist/* ./public/ && \
+  rm -Rf ./front
 
 
 # Final stage for app image
