@@ -30,8 +30,6 @@ const callback = async (response: any) => {
 </script>
 
 <template>
-  <h1>ログイン</h1>
-
   <form class="grid grid-cols-1 gap-4" @submit="handleSubmitForm">
     <fieldset>
       <Label>メールアドレス</Label>
@@ -46,5 +44,16 @@ const callback = async (response: any) => {
     <Button>ログイン</Button>
   </form>
 
-  <GoogleLogin :callback="callback" />
+  <div className="mt-4 relative">
+    <div className="absolute inset-0 flex items-center" aria-hidden="true">
+      <div className="w-full border-t border-gray-200" />
+    </div>
+    <div className="relative flex justify-center text-sm font-medium leading-6">
+      <span className="bg-white px-6 text-gray-900">または</span>
+    </div>
+  </div>
+
+  <div class="mt-4 text-center">
+    <GoogleLogin :callback="callback" prompt />
+  </div>
 </template>

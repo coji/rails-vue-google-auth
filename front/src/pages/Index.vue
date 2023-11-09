@@ -25,7 +25,7 @@ const { data: users } = useUsers()
     </div>
   </div>
 
-  <div class="text-center">
+  <div v-else class="text-center">
     <div class="text-2xl font-bold">Users</div>
     <Table>
       <TableHeader>
