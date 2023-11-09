@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card'
-import { usePosts } from '@/features/posts/hooks/usePosts'
+  Table,
+  TableBody,
+  TableHeader,
+  TableHead,
+  TableCell,
+  TableRow,
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { useUsers } from '@/features/users/hooks/useUsers'
 import { useAuth } from '@/hooks/useAuth'
 
 const { me } = useAuth()
-const { data: posts } = usePosts()
+const { data: users } = useUsers()
 </script>
 
 <template>
@@ -24,17 +25,39 @@ const { data: posts } = usePosts()
     </div>
   </div>
 
-  <div v-else class="grid grid-cols-2 gap-2">
-    <Card v-for="post of posts" :key="post.id">
-      <CardHeader>
-        <CardTitle>{{ post.title }}</CardTitle>
-        <CardDescription>
-          {{ post.created_at }} {{ post.updated_at }}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div>{{ post.body }}</div>
-      </CardContent>
-    </Card>
+  <div class="text-center">
+    <div class="text-2xl font-bold">Users</div>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>ID</TableHead>
+          <TableHead>Provider</TableHead>
+          <TableHead>Name</TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Created At</TableHead>
+          <TableHead>Updated At</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow v-for="user of users" :key="user.id">
+          <TableCell>ID</TableCell>
+          <TableCell>
+            {{ user.provider }}
+          </TableCell>
+          <TableCell>
+            {{ user.name }}
+          </TableCell>
+          <TableCell>
+            {{ user.email }}
+          </TableCell>
+          <TableCell>
+            {{ user.created_at }}
+          </TableCell>
+          <TableCell>
+            {{ user.updated_at }}
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
   </div>
 </template>

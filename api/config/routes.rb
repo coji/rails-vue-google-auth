@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       mount_devise_token_auth_for 'User', at: 'auth'
 
       # 認証が必要なルーティング
-      resources :posts
+      resources :users, only: %i[index]
     end
   end
 end

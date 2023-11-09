@@ -6,10 +6,3 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 User.create!(name: 'testuser', email: "testuser@example.com", password: "password")
-
-20.times do
-  Post.create(
-      title: Faker::Lorem.sentence(word_count: 3),
-      body: Faker::Lorem.paragraph(sentence_count: 3)
-  )
-end
