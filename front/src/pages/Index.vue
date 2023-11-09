@@ -48,7 +48,7 @@ const { data: users } = useUsers()
             <TableCell>
               <div class="flex flex-row items-center gap-2">
                 <Avatar class="w-6 h-6">
-                  <AvatarImage :src="user.image"></AvatarImage>
+                  <AvatarImage :src="user.image ?? ''"></AvatarImage>
                 </Avatar>
                 <div>
                   {{ user.name }}
