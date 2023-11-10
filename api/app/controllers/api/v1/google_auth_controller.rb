@@ -6,7 +6,7 @@ module Api
   module V1
     # Google認証用コントローラー
     class GoogleAuthController < DeviseTokenAuth::ApplicationController
-      def auth
+      def sign_in
         user_data =
           Google::Auth::IDTokens.verify_oidc(
             params[:id_token],
