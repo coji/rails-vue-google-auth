@@ -166,12 +166,14 @@ export const useAuth = () => {
         title: 'Login Success',
         description: 'You are logged in.',
         variant: 'default',
+        duration: 3000,
       }),
     onError: (error) =>
       toast({
         title: 'Login Error',
         description: error.message,
         variant: 'destructive',
+        duration: 3000,
       }),
   })
 
@@ -184,6 +186,7 @@ export const useAuth = () => {
         title: 'Logout Error',
         description: 'Not logged in.',
         variant: 'destructive',
+        duration: 3000,
       })
       return
     }
@@ -207,6 +210,7 @@ export const useAuth = () => {
     toast({
       title: 'Logout Success',
       description: 'You are logged out.',
+      duration: 3000,
     })
   }
 
